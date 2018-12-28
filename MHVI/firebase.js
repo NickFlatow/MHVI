@@ -66,9 +66,9 @@
       })
       // listens for changes for any child in the database
       dbDropdown.on('child_changed', snap => {
-        //if there is change this method is invoked
-        //we take the key from the child that was change and use it as our option value id
-        //to update the new value in the list
+        //if a child is modified this method is invoked
+        //we take the key from the child that was changed and plug it in to our option value
+        //to update the new text displayed in the list
         $('#list option[value='+snap.key+']').text(snap.val().Item);
       })
       //listens for any children removed from the database then updates the selectlist
