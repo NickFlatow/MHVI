@@ -58,7 +58,6 @@
       const dbDropdown = firebase.database().ref();
       //add all itmes from database
       dbDropdown.on('child_added', snap => {
-        //child added iterates through the database looking for all children
         //for each child in the database
         //we a add new option to select list
         //give that option the value of the current childs key
