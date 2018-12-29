@@ -17,41 +17,70 @@
   //   });
   //   hatRef.on('value', snap => console.log(snap.val()));
 
+  function readDatabase(searchTerm,output){
+    //grab a reference to object from the database with the String from itemName
+    //objectname = String from itemName
+    const dbRead = firebase.database().ref().child(searchTerm);
+    dbRead.on('value', snap => {
+        // $('#object').html(JSON.stringify(snap.val(), null, 3));
+      //get timestamp from firebase and convert to javascript Date object
+      let date = new Date(snap.val().Date);
+      output.html("Item: " + snap.val().Item +
+          "\nCost: " + snap.val().Cost +
+          "\nQuantity: " + snap.val().Quantity +
+          "\nDate: " + (date.getMonth() + 1) + "-" + date.getDate() + "-" + date.getFullYear());
+      });
+  }
+  function updateDatabase(item,quantityTxtField){
+    // //item we are updating is taken from the searchName txtbox
+    // var itemQuantity = firebase.database().ref('bike/Quantity');
+    /* add validation to ensure that #searchName is not empty and that #searchName String exists in the database*/
+    //grab database reference to the quantity of the String from the seachName txt feild
+    const itemQuantity = firebase.database().ref(item + "/Quantity");
+    itemQuantity.transaction(function(currentQuantity){
+      /*add validation such that quantity textField is not empty*/
+      return (currentQuantity + parseInt(quantityTxtField));
+    });
+  }
+
     $(document).ready(function(){
       //search database for item
       $("#search").click(function(){
-        //grab a reference to object from the database with the String from itemName
-        //objectname = String from itemName
-        const dbRead = firebase.database().ref().child($('#searchName').val());
-        dbRead.on('value', snap => {
-            // $('#object').html(JSON.stringify(snap.val(), null, 3));
-          //get timestamp from firebase and convert to javascript Date object
-          let date = new Date(snap.val().Date);
-          //print to object pre
-          $('#object').html("Item: " + snap.val().Item +
-              "\nCost: " + snap.val().Cost +
-              "\nQuantity: " + snap.val().Quantity +
-              "\nDate: " + (date.getMonth() + 1) + "-" + date.getDate() + "-" + date.getFullYear());
-          });
+          //grab string from searchName textbox
+          readDatabase($('#searchName').val(),$('#object'));
+
+          // const dbRead = firebase.database().ref().child($('#searchName').val());
+          // dbRead.on('value', snap => {
+          //     // $('#object').html(JSON.stringify(snap.val(), null, 3));
+          //   //get timestamp from firebase and convert to javascript Date object
+          //   let date = new Date(snap.val().Date);
+          //   //print to object pre
+          //   $('#object').html("Item: " + snap.val().Item +
+          //       "\nCost: " + snap.val().Cost +
+          //       "\nQuantity: " + snap.val().Quantity +
+          //       "\nDate: " + (date.getMonth() + 1) + "-" + date.getDate() + "-" + date.getFullYear());
+          //   });
       });
       //update quanitity of item
       $('#btnUpdate').click(function(){
-        // //item we are updating is taken from the searchName txtbox
-        // var itemQuantity = firebase.database().ref('bike/Quantity');
+        updateDatabase(String($('#searchName').val()),$('#txtUpdate').val());
+        // const itemQuantity = firebase.database().ref(String($('#searchName').val()) + "/Quantity");
         // itemQuantity.transaction(function(currentQuantity){
-        //   return (currentQuantity + 1);
+        //   /*add validation such that txtUpdate is not empty*/
+        //   return (currentQuantity + parseInt($('#txtUpdate').val()));
         // });
-
-        /* add validation to ensure that #searchName is not empty and that #searchName String exists in the database*/
-
-        //grab database reference to the quantity of the String from the seachName txt feild
-        const itemQuantity = firebase.database().ref( String($('#searchName').val()) + "/Quantity");
-
-        itemQuantity.transaction(function(currentQuantity){
-          /*add validation such that txtUpdate is not empty*/
-          return (currentQuantity + parseInt($('#txtUpdate').val()));
-        });
       //btnUpdate
+      });
+      $('#driverBtnUpdate').click(function(){
+        //grab database reference to the quantity of the String from the seachName txt feild
+        updateDatabase($('#list').find(":selected").text(),$('#driverTxtUpdate').val())
+        // const itemQuantity = firebase.database().ref($('#list').find(":selected").text() + "/Quantity");
+        //
+        // itemQuantity.transaction(function(currentQuantity){
+        //   /*add validation such that txtUpdate is not empty*/
+        //   return (currentQuantity + parseInt($('#txtUpdate').val()));
+        // });
+      //driverBtnUpdate
       });
 
       //sync dropdown list changes
@@ -76,7 +105,10 @@
         $('#list option[value='+snap.key +']').remove();
       })
 
-
+      $('#list').change(function() {
+        let listItem = $('#list').find(":selected").text();
+        readDatabase(listItem,$(driverOutput));
+      });
 
     //doc.ready()
     });
