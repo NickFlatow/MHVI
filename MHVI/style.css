@@ -6,8 +6,8 @@
 }
 .f{
   color:#000;
-  margin-top: 80px;
-  text-align:center;
+  /*margin-top: 80px;*/
+  /*text-align:center;*/
 }
 .inline{
   float:left;
@@ -27,8 +27,8 @@ body {
 
 form {
   padding: 20px;
-  background: #b9f2ff;
-  color: #8da2c4;
+  background: #B4B7BA;
+  color: #000;
   box-shadow: 2px 2px 2px #313131;
   width:570px;
 }
@@ -57,8 +57,8 @@ input {
 button {
   height: 30px;
   line-height: 30px;
-  background: #607175;
-  color: #b9f2ff;
+  background: #F0EDE5;
+  color: #000;
   box-shadow:2px 2px 2px #313131;
 }
 .not {
@@ -70,4 +70,7 @@ button {
 .error {
   color: #F60;
   font-size: 10px;
+}
+.hide{
+  visibility:hidden;
 }

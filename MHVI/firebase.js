@@ -8,28 +8,32 @@
     messagingSenderId: "630227463036"
   };
   firebase.initializeApp(config);
-  // //create reference to Hats in db
-  // var hatRef = firebase.database().ref().child('Hats');
-  //
-  // //sync changes in Hats to site
-  // hatRef.on('value', snap => {
-  //     $('#object').html(JSON.stringify(snap.val(), null, 3));
-  //   });
-  //   hatRef.on('value', snap => console.log(snap.val()));
 
-  function readDatabase(searchTerm,output){
-    //grab a reference to object from the database with the String from itemName
-    //objectname = String from itemName
-    const dbRead = firebase.database().ref().child(searchTerm);
-    dbRead.on('value', snap => {
-        // $('#object').html(JSON.stringify(snap.val(), null, 3));
-      //get timestamp from firebase and convert to javascript Date object
-      let date = new Date(snap.val().Date);
-      output.html("Item: " + snap.val().Item +
-          "\nCost: " + snap.val().Cost +
-          "\nQuantity: " + snap.val().Quantity +
-          "\nDate: " + (date.getMonth() + 1) + "-" + date.getDate() + "-" + date.getFullYear());
-      });
+  firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    // User is signed in.
+    $('#loginForm').addClass("hide");
+    $('#userInfoForm').removeClass("hide");
+  } else {
+    // No user is signed in.
+    $('#userInfoForm').addClass("hide");
+    $('#loginForm').removeClass("hide");
+    //login form
+  }
+});
+
+//seaches database with given searchTerm and prints result to given output
+function searchDatabase(searchTerm,output){
+  //grab a reference to object from the database with the String from searchTerm
+  const dbRead = firebase.database().ref().child(searchTerm);
+  dbRead.on('value', snap => {
+    //get timestamp from firebase and convert to javascript Date object
+    let date = new Date(snap.val().Date);
+    output.html("Item: " + snap.val().Item +
+        "\nCost: " + snap.val().Cost +
+        "\nQuantity: " + snap.val().Quantity +
+        "\nDate: " + (date.getMonth() + 1) + "-" + date.getDate() + "-" + date.getFullYear());
+    });
   }
   function updateDatabase(item,quantityTxtField){
     // //item we are updating is taken from the searchName txtbox
@@ -42,49 +46,45 @@
       return (currentQuantity + parseInt(quantityTxtField));
     });
   }
+  $(document).ready(function(){
+    //search database for item
+    $("#search").click(function(){
+        //grab string from searchName textbox
+        searchDatabase($('#searchName').val(),$('#object'));
+    });
+    //update quanitity of item
+    $('#btnUpdate').click(function(){
+      updateDatabase(String($('#searchName').val()),$('#txtUpdate').val());
+    });
+    $('#driverBtnUpdate').click(function(){
+      updateDatabase($('#list').find(":selected").text(),$('#driverTxtUpdate').val())
+    });
+    $('#loginBtn').click(function(){
+      let email = $('#userName').val();
+      let pwd = $('#password').val();
 
-    $(document).ready(function(){
-      //search database for item
-      $("#search").click(function(){
-          //grab string from searchName textbox
-          readDatabase($('#searchName').val(),$('#object'));
+      //authenticate user information
+      firebase.auth().signInWithEmailAndPassword(email, pwd).catch(function(error) {
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        alert("Error : " + errorMessage);
+      });
+      //populate userInfo form
+      $('#userInfo').html("Email :" + email + "\n" + "Password : " + pwd);
 
-          // const dbRead = firebase.database().ref().child($('#searchName').val());
-          // dbRead.on('value', snap => {
-          //     // $('#object').html(JSON.stringify(snap.val(), null, 3));
-          //   //get timestamp from firebase and convert to javascript Date object
-          //   let date = new Date(snap.val().Date);
-          //   //print to object pre
-          //   $('#object').html("Item: " + snap.val().Item +
-          //       "\nCost: " + snap.val().Cost +
-          //       "\nQuantity: " + snap.val().Quantity +
-          //       "\nDate: " + (date.getMonth() + 1) + "-" + date.getDate() + "-" + date.getFullYear());
-          //   });
-      });
-      //update quanitity of item
-      $('#btnUpdate').click(function(){
-        updateDatabase(String($('#searchName').val()),$('#txtUpdate').val());
-        // const itemQuantity = firebase.database().ref(String($('#searchName').val()) + "/Quantity");
-        // itemQuantity.transaction(function(currentQuantity){
-        //   /*add validation such that txtUpdate is not empty*/
-        //   return (currentQuantity + parseInt($('#txtUpdate').val()));
-        // });
-      //btnUpdate
-      });
-      $('#driverBtnUpdate').click(function(){
-        //grab database reference to the quantity of the String from the seachName txt feild
-        updateDatabase($('#list').find(":selected").text(),$('#driverTxtUpdate').val())
-        // const itemQuantity = firebase.database().ref($('#list').find(":selected").text() + "/Quantity");
-        //
-        // itemQuantity.transaction(function(currentQuantity){
-        //   /*add validation such that txtUpdate is not empty*/
-        //   return (currentQuantity + parseInt($('#txtUpdate').val()));
-        // });
-      //driverBtnUpdate
-      });
 
-      //sync dropdown list changes
-      const dbDropdown = firebase.database().ref();
+    })
+    $('#logoutBtn').click(function(){
+      firebase.auth().signOut();
+      alert("logged out");
+    })
+
+    //sync database changes in dropdown list
+
+    //grab reference to database
+    const dbDropdown = firebase.database().ref();
+    //databse event handlers
       //add all itmes from database
       dbDropdown.on('child_added', snap => {
         //for each child in the database
@@ -105,11 +105,11 @@
         $('#list option[value='+snap.key +']').remove();
       })
 
-      $('#list').change(function() {
-        let listItem = $('#list').find(":selected").text();
-        readDatabase(listItem,$(driverOutput));
-      });
-
+    $('#list').change(function() {
+      let listItem = $('#list').find(":selected").text();
+      searchDatabase(listItem,$(driverOutput));
+    });
     //doc.ready()
     });
+//function
 }());

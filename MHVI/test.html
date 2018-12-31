@@ -24,7 +24,8 @@
 
   <div class="container">
     <form name="mhvi">
-      <h2>MHVI</h2>
+      <h1>MHVI</h1>
+      <h2>Database Entry Form</h2>
       <div class = "inline">
         <label for="item">Item</label>
         <input type="text" name="name" id="name" placeholder="Enter the name of the item">
@@ -40,47 +41,53 @@
 
       <div id = "output" class = "f"></div>
 
-      <button type="submit" id = "submit">Approved?</button>
+      <button type="submit" id = "submit">Submit</button>
     </form>
   </div>
 
-  <h1> Search for item in database by name</h1>
-  <input type ="text" name ="searchName" id = "searchName" placeholder = "search here">
-  <button type ="button" id ="search">Search</button>
-  <pre id = "object"></pre>
-
-  <input type ="text" name ="txtUpdate" id = "txtUpdate" placeholder = "update here">
-  <button type = "button" id ="btnUpdate">Update Quantity</button>
-
   <form>
+    <h1> Admin</h1>
+    <input type ="text" name ="searchName" id = "searchName" placeholder = "search here">
+    <button type ="button" id ="search">Search</button>
+    <pre id = "object" class = "f"></pre>
+    <input type ="text" name ="txtUpdate" id = "txtUpdate" placeholder = "update here">
+    <button type = "button" id ="btnUpdate">Update Quantity</button>
+  </form>
+  <br>
+  <br>
+  <form>
+    <h1>Driver</h1>
     <select id = "list">
       <option>select item</option>
     </select>
-    <pre id = "driverOutput"></pre>
+    <pre id = "driverOutput" class = "f"></pre>
     <input type ="text" name ="driverTxtUpdate" id = "driverTxtUpdate" placeholder = "driver update here">
-    <button type = "button" id ="driverBtnUpdate">Driver Update Quantity</button>
+    <button type = "button" id ="driverBtnUpdate">Update Quantity</button>
   </form>
-  <!-- <ul id = "list">
+  <br>
+  <br>
+  <form id = "loginForm">
+    <h1>login</h1>
+    <input type = "text" placeholder ="Username" id = "userName">
+    <input type = "password" placeholder ="Password" id = "password">
+    <button type = "button" id = "loginBtn">Login</button>
+  </form>
+  <br>
+  <br>
+  <form id = "userInfoForm">
+    <h1>user info</h1>
+    <pre id = "userInfo"></pre>
+    <button type = "button" id = "logoutBtn">Logout</button>
+  </form>
+  <br>
+  <br>
+  <form>
+    <input type="checkbox" name="report" value="annual">annual
+    <input type="checkbox" name="report" value="quarterly" checked="checked">quaterly<br>
+    <input type="submit" value="Submit">
+    <button type ="button" id = "printReport">print Report</button>
+  </form>
 
-  </ul> -->
-    <!-- <script>
-      //test db write
-      var bigOne = document.getElementById('bigOne');
-
-
-      //test db write
-      var rootRef = firebase.database().ref().child('blah');
-      // var newRef = rootRef.push();
-      $(document).ready(function(){
-        $("#submit").click(function(){
-          rootRef.set({
-            info1:$('#name').val(),
-            info2:$('#quantity').val()
-          })
-        });
-      });
-    </script> -->
-
-  </body>
+</body>
 
 </html>
