@@ -9,17 +9,36 @@
   };
   firebase.initializeApp(config);
 
+  //check if user is logged in
   firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     // User is signed in.
-    $('#loginForm').addClass("hide");
-    $('#userInfoForm').removeClass("hide");
+    if (user.email == 'admin@mhvi.com'){
+      $('#loginForm').addClass("hide");
+
+      $('#dbEntryForm').removeClass("hide");
+      $('#admin').removeClass("hide");
+      $('#userInfoForm').removeClass("hide");
+      $('#reportForm').removeClass("hide");
+    }
+    else if (user.email == 'driver@mhvi.com'){
+      $('#loginForm').addClass("hide");
+
+      $('#userInfoForm').removeClass("hide");
+      $('#driver').removeClass("hide");  
+    }
   } else {
     // No user is signed in.
-    $('#userInfoForm').addClass("hide");
     $('#loginForm').removeClass("hide");
-    //login form
+
+    $('#userInfoForm').addClass("hide");
+    $('#dbEntryForm').addClass("hide");
+    $('#admin').addClass("hide");
+    $('#driver').addClass("hide");
+    $('#userInfoForm').addClass("hide");
+    $('#reportForm').addClass("hide");
   }
+//onAuthStateChanged
 });
 
 //seaches database with given searchTerm and prints result to given output
@@ -77,7 +96,6 @@ function searchDatabase(searchTerm,output){
     })
     $('#logoutBtn').click(function(){
       firebase.auth().signOut();
-      alert("logged out");
     })
 
     //sync database changes in dropdown list

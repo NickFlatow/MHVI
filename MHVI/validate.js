@@ -1,12 +1,16 @@
 // Wait for the DOM to be ready
 $(function() {
+  //custom method to check that fields only contain letters and spaces
+  jQuery.validator.addMethod("lettersonly", function(value, element) {
+    return this.optional(element) || /^[a-z\s]+$/i.test(value);
+  }, "Only alphabetical characters and spaces");
   // Initialize form validation on the form.
   $("form[name='mhvi']").validate({
     // Specify validation rules
     rules: {
-      name: {
+      item: {
         required: true,
-        digits:false
+        lettersonly:true
       },
       quantity:{
         required: true,

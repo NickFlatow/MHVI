@@ -18,17 +18,13 @@
   </head>
 
   <body>
-
-    <!--test db write-->
-
-
-  <div class="container">
+  <div class="container" id = "dbEntryForm">
     <form name="mhvi">
       <h1>MHVI</h1>
       <h2>Database Entry Form</h2>
       <div class = "inline">
         <label for="item">Item</label>
-        <input type="text" name="name" id="name" placeholder="Enter the name of the item">
+        <input type="text" name="item" id="item" placeholder="Enter the name of the item">
       </div>
       <div class = "inline">
         <label for="quanity">quantity</label>
@@ -45,7 +41,7 @@
     </form>
   </div>
 
-  <form>
+  <form id = "admin">
     <h1> Admin</h1>
     <input type ="text" name ="searchName" id = "searchName" placeholder = "search here">
     <button type ="button" id ="search">Search</button>
@@ -55,7 +51,7 @@
   </form>
   <br>
   <br>
-  <form>
+  <form id = "driver">
     <h1>Driver</h1>
     <select id = "list">
       <option>select item</option>
@@ -81,7 +77,7 @@
   </form>
   <br>
   <br>
-  <form>
+  <form id = "reportForm">
     <input type="checkbox" name="report" value="annual">annual
     <input type="checkbox" name="report" value="quarterly" checked="checked">quaterly<br>
     <input type="submit" value="Submit">
