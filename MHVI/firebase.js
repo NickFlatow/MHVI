@@ -9,64 +9,22 @@
   };
   firebase.initializeApp(config);
 
-  //check if user is logged in
-  firebase.auth().onAuthStateChanged(function(user) {
-  if (user) {
-    // User is signed in.
-    if (user.email == 'admin@mhvi.com'){
-      $('#loginForm').addClass("hide");
 
-      $('#dbEntryForm').removeClass("hide");
-      $('#admin').removeClass("hide");
-      $('#userInfoForm').removeClass("hide");
-      $('#reportForm').removeClass("hide");
-    }
-    else if (user.email == 'driver@mhvi.com'){
-      $('#loginForm').addClass("hide");
+  // function redirect(){
+  //   //get currentUser from firebase
+  //   let user = firebase.auth().currentUser;
+  //   //redirect to proper page
+  //   if (user.email == 'admin@mhvi.com'){
+  //     window.location = "admin.html";
+  //   } else if (user.email == 'driver@mhvi.com'){
+  //     window.location = "driver.html";
+  //   }
+  // }
 
-      $('#userInfoForm').removeClass("hide");
-      $('#driver').removeClass("hide");  
-    }
-  } else {
-    // No user is signed in.
-    $('#loginForm').removeClass("hide");
-
-    $('#userInfoForm').addClass("hide");
-    $('#dbEntryForm').addClass("hide");
-    $('#admin').addClass("hide");
-    $('#driver').addClass("hide");
-    $('#userInfoForm').addClass("hide");
-    $('#reportForm').addClass("hide");
-  }
-//onAuthStateChanged
-});
-
-//seaches database with given searchTerm and prints result to given output
-function searchDatabase(searchTerm,output){
-  //grab a reference to object from the database with the String from searchTerm
-  const dbRead = firebase.database().ref().child(searchTerm);
-  dbRead.on('value', snap => {
-    //get timestamp from firebase and convert to javascript Date object
-    let date = new Date(snap.val().Date);
-    output.html("Item: " + snap.val().Item +
-        "\nCost: " + snap.val().Cost +
-        "\nQuantity: " + snap.val().Quantity +
-        "\nDate: " + (date.getMonth() + 1) + "-" + date.getDate() + "-" + date.getFullYear());
-    });
-  }
-  function updateDatabase(item,quantityTxtField){
-    // //item we are updating is taken from the searchName txtbox
-    // var itemQuantity = firebase.database().ref('bike/Quantity');
-    /* add validation to ensure that #searchName is not empty and that #searchName String exists in the database*/
-    //grab database reference to the quantity of the String from the seachName txt feild
-    const itemQuantity = firebase.database().ref(item + "/Quantity");
-    itemQuantity.transaction(function(currentQuantity){
-      /*add validation such that quantity textField is not empty*/
-      return (currentQuantity + parseInt(quantityTxtField));
-    });
-  }
   $(document).ready(function(){
     //search database for item
+
+    // DOESN'T LIKE SPACE PRODUCES ERROR WITH left shoes
     $("#search").click(function(){
         //grab string from searchName textbox
         searchDatabase($('#searchName').val(),$('#object'));
@@ -75,28 +33,50 @@ function searchDatabase(searchTerm,output){
     $('#btnUpdate').click(function(){
       updateDatabase(String($('#searchName').val()),$('#txtUpdate').val());
     });
-    $('#driverBtnUpdate').click(function(){
-      updateDatabase($('#list').find(":selected").text(),$('#driverTxtUpdate').val())
-    });
+
+    //using validation for driver.html form
+    // $('#driverBtnUpdate').click(function(){
+    //   let item = $('#list').find(":selected").text()
+    //   let quantity = $('#driverTxtUpdate').val();
+    //
+    //   // updateDatabase(item,quantity);
+    //   if (item != 'Select Item'){
+    //     updateDatabase(item,quantity);
+    //   }else{
+    //     //change to validation
+    //     alert("Select an item from the drop down box")
+    //   }
+    // });
     $('#loginBtn').click(function(){
-      let email = $('#userName').val();
+      let usr = $('#userName').val();
       let pwd = $('#password').val();
 
-      //authenticate user information
-      firebase.auth().signInWithEmailAndPassword(email, pwd).catch(function(error) {
+      //authenticate login information
+      firebase.auth().signInWithEmailAndPassword(usr, pwd).catch(function(error) {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
         alert("Error : " + errorMessage);
       });
-      //populate userInfo form
-      $('#userInfo').html("Email :" + email + "\n" + "Password : " + pwd);
-
-
-    })
+      //check if user is logged in
+      firebase.auth().onAuthStateChanged(function(user) {
+        if (user) {
+          // check which user signed in and redirect accordingly.
+          if (user.email == 'admin@mhvi.com'){
+            window.location.href = "admin.html";
+          }
+          else if (user.email == 'driver@mhvi.com'){
+            window.location = "driver.html";
+          }
+        }
+      //onAuthStateChanged
+      });
+    //login button
+    });
     $('#logoutBtn').click(function(){
       firebase.auth().signOut();
-    })
+      window.location = "login.html";
+    });
 
     //sync database changes in dropdown list
 
@@ -110,6 +90,7 @@ function searchDatabase(searchTerm,output){
         //give that option the value of the current childs key
         //and lastly populate the list the the current childs Item name
         $('#list').append('<option value = ' + snap.key + '>' + snap.val().Item + '</option>');
+        $('#adminList').append('<option value = ' + snap.key + '>' + snap.val().Item + '</option>');
       })
       // listens for changes for any child in the database
       dbDropdown.on('child_changed', snap => {
@@ -117,15 +98,25 @@ function searchDatabase(searchTerm,output){
         //we take the key from the child that was changed and plug it in to our option value
         //to update the new text displayed in the list
         $('#list option[value='+snap.key+']').text(snap.val().Item);
+        $('#adminList option[value='+snap.key+']').text(snap.val().Item);
       })
       //listens for any children removed from the database then updates the selectlist
       dbDropdown.on('child_removed', snap => {
         $('#list option[value='+snap.key +']').remove();
+        $('#adminList option[value='+snap.key +']').remove();
       })
 
     $('#list').change(function() {
       let listItem = $('#list').find(":selected").text();
-      searchDatabase(listItem,$(driverOutput));
+      if (listItem != "Select Item"){
+        searchDatabase(listItem,$(driverOutput));
+      }
+    });
+    $('#adminList').change(function() {
+      let listItem = $('#adminList').find(":selected").text();
+      if (listItem != "Select Item"){
+        searchDatabase(listItem,$(output));
+      }
     });
     //doc.ready()
     });
