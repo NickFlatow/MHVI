@@ -1,4 +1,3 @@
-// Wait for the DOM to be ready
 $(function() {
   //custom method to check that fields only contain letters and spaces
   jQuery.validator.addMethod("lettersonly", function(value, element) {
@@ -73,6 +72,19 @@ $(function() {
       let quantity = $('#driverTxtUpdate').val();
       updateDatabase(item,quantity);
     }
+  });
+  $(document).ready(function() {
+    $(".update").on("click",function() {
+    // https://stackoverflow.com/questions/34613692/creating-buttons-dynamically-using-jquery
+    //   function createRefreshButton() {
+    // return $('<button/>', {
+    //     text: 'Refresh Data',
+    //     id: 'btn_refresh',
+    //     click: ClickRefresh
+    });
+}
+      alert("alsdkfj");
+    });
   });
   $("#adminSelectForm").validate({
       rules: {

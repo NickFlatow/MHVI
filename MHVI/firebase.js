@@ -9,21 +9,8 @@
   };
   firebase.initializeApp(config);
 
-
-  // function redirect(){
-  //   //get currentUser from firebase
-  //   let user = firebase.auth().currentUser;
-  //   //redirect to proper page
-  //   if (user.email == 'admin@mhvi.com'){
-  //     window.location = "admin.html";
-  //   } else if (user.email == 'driver@mhvi.com'){
-  //     window.location = "driver.html";
-  //   }
-  // }
-
   $(document).ready(function(){
     //search database for item
-
     //ERRORS left shoes
     $("#search").click(function(){
         //grab string from searchName textbox
@@ -66,27 +53,26 @@
       window.location = "login.html";
     });
 
-    //sync database changes in dropdown menu
+    const d = firebase.database().ref();
 
+    d.on('child_added', snap => {
+      // $('#table').append('<tr><td = "blah"><span>' + snap.key + '</span><button type = "button" class = "update">update</button></td></tr>');
+      $('#adminTable').append(snap.key + '<button type="button" class="update">update</button>');
+    })
+
+    //sync database changes in dropdown menu
     //grab reference to database
     const dbDropdown = firebase.database().ref();
     //databse event handlers
       //add all itmes from database
-      //snap = snapshot of the database
       dbDropdown.on('child_added', snap => {
-        //for each child in the database
-        //we a add new option to dropdown menu
-        //give that option the value of the current childs key
-        //and lastly populate the list the the current childs Item name
+        //driver list
         $('#list').append('<option value = ' + snap.key + '>' + snap.val().Item + '</option>');
 
         $('#adminList').append('<option value = ' + snap.key + '>' + snap.val().Item + '</option>');
       })
       // listens for changes to any child in the database
       dbDropdown.on('child_changed', snap => {
-        //if a child is modified this method is invoked
-        //we take the key from the child that was changed and plug it in to our option value
-        //to update the new text displayed in the list
         $('#list option[value='+snap.key+']').text(snap.val().Item);
         $('#adminList option[value='+snap.key+']').text(snap.val().Item);
       })

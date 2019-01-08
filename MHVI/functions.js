@@ -6,17 +6,20 @@ function dbWrite() {
     Quantity:(parseInt($('#quantity').val())),
     Cost:(parseInt($('#cost').val())),
     Date: firebase.database.ServerValue.TIMESTAMP
+
+
+  //php stuff here
   })
 }
-
+//item = name of item we want to change
+//quanityTxtField = txtField with quanity we want to add or subtract
 function updateDatabase(item,quantityTxtField){
-  //item we are updating is taken from searchName
   // var itemQuantity = firebase.database().ref('bike/Quantity');
-  /* add validation to ensure that #searchName is not empty and that #searchName String exists in the database*/
-  //grab database reference to the quantity of the String from seachName
+
+  //grab database reference to the quantity of the String from item
   const itemQuantity = firebase.database().ref(item + "/Quantity");
   itemQuantity.transaction(function(currentQuantity){
-    /*add validation such that quantity textField is not empty*/
+
     return (currentQuantity + parseInt(quantityTxtField));
   });
 }
