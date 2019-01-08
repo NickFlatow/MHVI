@@ -5,13 +5,12 @@ $(function() {
     return this.optional(element) || /^[a-z\s]+$/i.test(value);
   }, "Only alphabetical characters and spaces");
 
-  // Initialize form validation on the form.
   $("form[name='mhvi']").validate({
     // Specify validation rules
     rules: {
       item: {
         required: true,
-        lettersonly:true
+        // lettersonly:true
       },
       quantity:{
         required: true,
@@ -28,9 +27,8 @@ $(function() {
     },
     // Specify validation error messages
     messages: {
-      height: {
-        required:"Please enter your height",
-        digits: "you must enter positive numbers"
+      item: {
+        required:"Please enter an Item",
       },
       weight: {
         required: "Please enter your weight",
@@ -59,7 +57,22 @@ $(function() {
           required: "Please enter the quantity"
         }
       },
-      submitHandler: driverQuantityUpdate
+  });
+  $('#driverDropOff').click(function() {
+    //check if driver form meets validation rules
+    if ($('#driver').valid()) {
+      let item = $('#list').find(":selected").text();
+      let quantity = $('#driverTxtUpdate').val();
+      updateDatabase(item,(-1 * quantity));
+    }
+  });
+  $('#driverPickUp').click(function() {
+    //check if driver form meets validation rules
+    if ($('#driver').valid()) {
+      let item = $('#list').find(":selected").text();
+      let quantity = $('#driverTxtUpdate').val();
+      updateDatabase(item,quantity);
+    }
   });
   $("#adminSelectForm").validate({
       rules: {

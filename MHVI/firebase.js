@@ -24,7 +24,7 @@
   $(document).ready(function(){
     //search database for item
 
-    // DOESN'T LIKE SPACE PRODUCES ERROR WITH left shoes
+    //ERRORS left shoes
     $("#search").click(function(){
         //grab string from searchName textbox
         searchDatabase($('#searchName').val(),$('#object'));
@@ -33,22 +33,9 @@
     $('#btnUpdate').click(function(){
       updateDatabase(String($('#searchName').val()),$('#txtUpdate').val());
     });
-
-    //using validation for driver.html form
-    // $('#driverBtnUpdate').click(function(){
-    //   let item = $('#list').find(":selected").text()
-    //   let quantity = $('#driverTxtUpdate').val();
-    //
-    //   // updateDatabase(item,quantity);
-    //   if (item != 'Select Item'){
-    //     updateDatabase(item,quantity);
-    //   }else{
-    //     //change to validation
-    //     alert("Select an item from the drop down box")
-    //   }
-    // });
     $('#loginBtn').click(function(){
       let usr = $('#userName').val();
+      // alert(usr);
       let pwd = $('#password').val();
 
       //authenticate login information
@@ -61,6 +48,7 @@
       //check if user is logged in
       firebase.auth().onAuthStateChanged(function(user) {
         if (user) {
+          // alert(user.email);
           // check which user signed in and redirect accordingly.
           if (user.email == 'admin@mhvi.com'){
             window.location.href = "admin.html";
@@ -78,21 +66,23 @@
       window.location = "login.html";
     });
 
-    //sync database changes in dropdown list
+    //sync database changes in dropdown menu
 
     //grab reference to database
     const dbDropdown = firebase.database().ref();
     //databse event handlers
       //add all itmes from database
+      //snap = snapshot of the database
       dbDropdown.on('child_added', snap => {
         //for each child in the database
-        //we a add new option to select list
+        //we a add new option to dropdown menu
         //give that option the value of the current childs key
         //and lastly populate the list the the current childs Item name
         $('#list').append('<option value = ' + snap.key + '>' + snap.val().Item + '</option>');
+
         $('#adminList').append('<option value = ' + snap.key + '>' + snap.val().Item + '</option>');
       })
-      // listens for changes for any child in the database
+      // listens for changes to any child in the database
       dbDropdown.on('child_changed', snap => {
         //if a child is modified this method is invoked
         //we take the key from the child that was changed and plug it in to our option value
