@@ -73,19 +73,34 @@ $(function() {
       updateDatabase(item,quantity);
     }
   });
-  $(document).ready(function() {
-    $(".update").on("click",function() {
-    // https://stackoverflow.com/questions/34613692/creating-buttons-dynamically-using-jquery
-    //   function createRefreshButton() {
-    // return $('<button/>', {
-    //     text: 'Refresh Data',
-    //     id: 'btn_refresh',
-    //     click: ClickRefresh
+
+    $(".update").on('click', function(e){
+        alert('hello');
     });
-}
-      alert("alsdkfj");
+
+  // $(document).ready(function() {
+    $(".update").live('click',function() {
+      var $row = $(this).closest("tr");   // Find the row
+      var $text = $row.find(".up").text(); // Find the text
+      console.log($(this).closest("tr").find(".up").text());
+      // console.log();
     });
-  });
+  // });
+
+  // $(document).ready(function() {
+  //   $("#tableBody").live('click',function() {
+  //     // alert($(this).closest("tr").val());
+  //
+  //     var $row = $(this).closest("tr");   // Find the row
+  //     var $text = $row.find(".up").text(); // Find the text
+  //     // console.log($(this).find(".up").text());
+  //     console.log($(this).closest("tr").children("td").find(".up").text());
+  //   });
+  // $(document).on('click', $('.update'), function(){
+  //       var $row = $(this).closest("tr");   // Find the row
+  //       var $text = $row.find(".up").text(); // Find the text
+  //       console.log($(this).children());
+  // });
   $("#adminSelectForm").validate({
       rules: {
         adminList: {

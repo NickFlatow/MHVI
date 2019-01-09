@@ -23,7 +23,6 @@ function updateDatabase(item,quantityTxtField){
     return (currentQuantity + parseInt(quantityTxtField));
   });
 }
-
 //seaches database with given searchTerm and prints result to given output
 function searchDatabase(searchTerm,output){
   //grab a reference to object from the database with the String from searchTerm
