@@ -74,32 +74,41 @@ $(function() {
     }
   });
 
-    $(".update").on('click', function(e){
-        alert('hello');
-    });
-
   // $(document).ready(function() {
-    $(".update").live('click',function() {
-      var $row = $(this).closest("tr");   // Find the row
-      var $text = $row.find(".up").text(); // Find the text
-      console.log($(this).closest("tr").find(".up").text());
-      // console.log();
-    });
+    // $(".update").live('click',function() {
+    //   var $row = $(this).closest("tr");   // Find the row
+    //   var $text = $row.find(".up").text(); // Find the text
+    //   console.log($text);
+    // });
+    $('#tableBody').on('click','button.update',function(){
+        var $row = $(this).closest("tr");   // Find the row
+        var $text = $row.find(".up").text(); // Find the text
+        console.log($text);
+    })
+
+    // $(".update").click(function(){
+    //   alert("hello");
+    // })
+
+    // $("#tableBody").on('click', $('.update'), function(){
+    //   alert("hello");
+    // })
   // });
 
   // $(document).ready(function() {
-  //   $("#tableBody").live('click',function() {
-  //     // alert($(this).closest("tr").val());
-  //
-  //     var $row = $(this).closest("tr");   // Find the row
-  //     var $text = $row.find(".up").text(); // Find the text
-  //     // console.log($(this).find(".up").text());
-  //     console.log($(this).closest("tr").children("td").find(".up").text());
-  //   });
+    // $("#tableBody").on('click',function() {
+    //   // alert($(this).closest("tr").val());
+    //
+    //   var $row = $(this).closest("tr");   // Find the row
+    //   var $text = $row.find(".up").text(); // Find the text
+    //   // console.log($(this).find(".up").text());
+    //   console.log($(this).closest("tr"));
+    // });
   // $(document).on('click', $('.update'), function(){
-  //       var $row = $(this).closest("tr");   // Find the row
-  //       var $text = $row.find(".up").text(); // Find the text
-  //       console.log($(this).children());
+  //   alert("hello");
+  //       // var $row = $(this).closest("tr");   // Find the row
+  //       // var $text = $row.find(".up").text(); // Find the text
+  //       // console.log($(this).children());
   // });
   $("#adminSelectForm").validate({
       rules: {

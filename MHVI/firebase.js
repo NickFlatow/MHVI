@@ -52,21 +52,16 @@
       window.location = "login.html";
     });
 
-    const d = firebase.database().ref();
-
     const db = firebase.database().ref();
 
+    // db.on('child_added', snap => {
+    //     $('#tableBody').append('<tr><td class="up"><span>' + snap.key + '</span></td><td>' + snap.val().Cost + '</td><td>' + snap.val().Quantity +
+    //         '<td><button type = "button" class="update">Update</button></td></tr>');
+    // });
+
     db.on('child_added', snap => {
-        $('#tableBody').append('<tr><td class="up"><span>' + snap.key + '</span></td><td>' + snap.val().Cost + '</td><td>' + snap.val().Quantity +
-            '<td><button type = "button" class="update">Update</button></td></tr>');
+        $('#tableBody').append('<tr><td class="up"><span>' + snap.key + '</span></td><td><button type = "button" class="update">Update</button></td></tr>');
     });
-
-
-
-    d.on('child_added', snap => {
-      // $('#table').append('<tr><td = "blah"><span>' + snap.key + '</span><button type = "button" class = "update">update</button></td></tr>');
-      $('#table').append(snap.key + '<button type="button" class="update">update</button><br>');
-    })
 
     //sync database changes in dropdown menu
     //grab reference to database
