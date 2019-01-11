@@ -57,6 +57,15 @@ $(function() {
         }
       },
   });
+  jQuery.validator.addClassRules('test', {
+      rules: {
+        cost:{
+          required: true,
+          digits: true
+        }
+      }
+    });
+
   $('#driverDropOff').click(function() {
     //check if driver form meets validation rules
     if ($('#driver').valid()) {
@@ -74,42 +83,29 @@ $(function() {
     }
   });
 
-  // $(document).ready(function() {
-    // $(".update").live('click',function() {
-    //   var $row = $(this).closest("tr");   // Find the row
-    //   var $text = $row.find(".up").text(); // Find the text
-    //   console.log($text);
-    // });
-    $('#tableBody').on('click','button.update',function(){
-        var $row = $(this).closest("tr");   // Find the row
-        var $text = $row.find(".up").text(); // Find the text
-        console.log($text);
-    })
+  // $('#tableBody').on('click','.update',function(){
+  //     var $row = $(this).closest("tr");   // Find the row
+  //     var $text = $row.find(".up").text(); // Find the text
+  //     console.log($text);
+  // })
+  $('#tableBody').on('click','.update',function(){
+      let $row = $(this).closest("tr");   // Find the row
+      let $nextRow = $row.next("tr"); // Find the next row down
 
-    // $(".update").click(function(){
-    //   alert("hello");
-    // })
+      $nextRow.toggle();
+  });
+  $('#tableBody').on('click','.submit',function(){
+    let $row = $(this).closest("tr"); // get the row where the button was pushed
+    let $prevRow = $row.prev(); // get the previous row
+    let $item = $prevRow.find(".up").text(); // Find the item we are upadting
 
-    // $("#tableBody").on('click', $('.update'), function(){
-    //   alert("hello");
-    // })
-  // });
-
-  // $(document).ready(function() {
-    // $("#tableBody").on('click',function() {
-    //   // alert($(this).closest("tr").val());
-    //
-    //   var $row = $(this).closest("tr");   // Find the row
-    //   var $text = $row.find(".up").text(); // Find the text
-    //   // console.log($(this).find(".up").text());
-    //   console.log($(this).closest("tr"));
-    // });
-  // $(document).on('click', $('.update'), function(){
-  //   alert("hello");
-  //       // var $row = $(this).closest("tr");   // Find the row
-  //       // var $text = $row.find(".up").text(); // Find the text
-  //       // console.log($(this).children());
-  // });
+    console.log($row.valid());
+    if ($row.valid()){ //check if row meet validation requirments
+      let $cost = $row.find("input[name = 'cost']").val();
+      updateDatabase($item,$cost);
+    }
+    // console.log($row);
+  });
   $("#adminSelectForm").validate({
       rules: {
         adminList: {

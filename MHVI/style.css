@@ -37,5 +37,5 @@ body {
   font-size: 10px;
 }
 .hide{
-  visibility:hidden;
+  display:none;
 }

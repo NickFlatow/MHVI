@@ -54,13 +54,15 @@
 
     const db = firebase.database().ref();
 
-    // db.on('child_added', snap => {
-    //     $('#tableBody').append('<tr><td class="up"><span>' + snap.key + '</span></td><td>' + snap.val().Cost + '</td><td>' + snap.val().Quantity +
-    //         '<td><button type = "button" class="update">Update</button></td></tr>');
-    // });
-
-    db.on('child_added', snap => {
-        $('#tableBody').append('<tr><td class="up"><span>' + snap.key + '</span></td><td><button type = "button" class="update">Update</button></td></tr>');
+    db.startAt('a').orderByKey().on('child_added', snap => {
+        $('#tableBody').append('<tr><td class="up"><span>' + snap.key + '</span></td><td>' + snap.val().Cost + '</td><td>' + snap.val().Quantity +
+            '<td><button type = "button" class="update">Update</button></td></tr>' +
+            '<tr class = "hide">'+
+              '<td>Test</td>'+
+              '<td class = "test"><input type="text" name="cost" placeholder="Cost"></td>'+
+              '<td class = "test"><input type="text" name="quantity" placeholder="Quantity"></td>'+
+              '<td><button type = "button" class = "submit">submit</button>'+
+            '</td></tr>');
     });
 
     //sync database changes in dropdown menu
