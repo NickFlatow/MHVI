@@ -51,7 +51,6 @@
       firebase.auth().signOut();
       window.location = "login.html";
     });
-
     const dbTable = firebase.database().ref();
     dbTable.startAt('A').orderByKey().on('child_added', snap => {
         $('#tableBody').append('<tr name ='+snap.key +'><td class="item"><span>' + snap.key + '</span></td><td class = "cost">' + snap.val().Cost + '</td><td class = quantity>' + snap.val().Quantity +
