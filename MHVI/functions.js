@@ -1,14 +1,11 @@
 function dbWrite() {
   //reference to database
-  const dbWrite = firebase.database().ref().child(String($('#item').val()));
+  const dbWrite = firebase.database().ref().child($('#item').val().replace(/ /g,'').toLowerCase());
   dbWrite.set({
-    Item:$('#item').val(),
+    Item:$('#item').val().replace(/ /g,'').toLowerCase(),
     Quantity:(parseInt($('#quantity').val())),
-    Cost:(parseInt($('#cost').val())),
+    Cost:(parseFloat($('#cost').val())),
     Date: firebase.database.ServerValue.TIMESTAMP
-
-
-  //php stuff here
   })
 }
 //item = name of item we want to change
@@ -19,9 +16,19 @@ function updateDatabase(item,quantityTxtField){
   //grab database reference to the quantity of the String from item
   const itemQuantity = firebase.database().ref(item + "/Quantity");
   itemQuantity.transaction(function(currentQuantity){
-
     return (currentQuantity + parseInt(quantityTxtField));
   });
+}
+function adminUpdateDatabase(item,quantity,cost){
+  const itemCost = firebase.database().ref(item + "/Cost");
+  itemCost.transaction(function(){
+    return (parseFloat(cost));
+  });
+  const itemQuantity = firebase.database().ref(item + "/Quantity");
+  itemQuantity.transaction(function(currentQuantity){
+    return (currentQuantity + parseInt(quantity));
+  });
+
 }
 //seaches database with given searchTerm and prints result to given output
 function searchDatabase(searchTerm,output){
@@ -36,8 +43,7 @@ function searchDatabase(searchTerm,output){
         "\nDate: " + (date.getMonth() + 1) + "-" + date.getDate() + "-" + date.getFullYear());
     });
   }
-  function driverQuantityUpdate(string){
-      alert(string);
+  function driverQuantityUpdate(){
       let item = $('#list').find(":selected").text();
       let quantity = $('#driverTxtUpdate').val();
       updateDatabase(item,quantity);

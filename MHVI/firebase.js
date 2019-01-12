@@ -52,38 +52,45 @@
       window.location = "login.html";
     });
 
-    const db = firebase.database().ref();
-
-    db.startAt('a').orderByKey().on('child_added', snap => {
-        $('#tableBody').append('<tr><td class="up"><span>' + snap.key + '</span></td><td>' + snap.val().Cost + '</td><td>' + snap.val().Quantity +
+    const dbTable = firebase.database().ref();
+    dbTable.startAt('A').orderByKey().on('child_added', snap => {
+        $('#tableBody').append('<tr name ='+snap.key +'><td class="item"><span>' + snap.key + '</span></td><td class = "cost">' + snap.val().Cost + '</td><td class = quantity>' + snap.val().Quantity +
             '<td><button type = "button" class="update">Update</button></td></tr>' +
             '<tr class = "hide">'+
-              '<td>Test</td>'+
-              '<td class = "test"><input type="text" name="cost" placeholder="Cost"></td>'+
-              '<td class = "test"><input type="text" name="quantity" placeholder="Quantity"></td>'+
-              '<td><button type = "button" class = "submit">submit</button>'+
+              '<td><button type = "button" class = "delete">Delete</button></td>'+
+              '<td class = "hidden"><input type="text" name="costTR" placeholder="Cost"></td>'+
+              '<td class = "hidden"><input type="text" name="quantityTR" placeholder="Quantity"></td>'+
+              '<td><button type = "button" class = "submit">Submit</button>'+
             '</td></tr>');
+          });
+    dbTable.on('child_changed', snap => {
+        $('tr[name =' + snap.key +']').find(".cost").html(snap.val().Cost);
+        $('tr[name =' + snap.key +']').find(".quantity").html(snap.val().Quantity);
     });
-
+    dbTable.on('child_removed', snap => {
+        let $nextRow = $('tr[name = '+ snap.key +']').next("tr");
+        $nextRow.remove();
+        $('tr[name = '+ snap.key +']').remove();
+    });
     //sync database changes in dropdown menu
     //grab reference to database
     const dbDropdown = firebase.database().ref();
     //databse event handlers
-      //add all itmes from database
+      //add all itmes from databases
       dbDropdown.on('child_added', snap => {
         //driver list
+        // console.log(snap.key.replace(/ /g,''));
         $('#list').append('<option value = ' + snap.key + '>' + snap.val().Item + '</option>');
-
         $('#adminList').append('<option value = ' + snap.key + '>' + snap.val().Item + '</option>');
       })
       // listens for changes to any child in the database
       dbDropdown.on('child_changed', snap => {
-        $('#list option[value='+snap.key+']').text(snap.val().Item);
-        $('#adminList option[value='+snap.key+']').text(snap.val().Item);
+        $('#list option[value='+ snap.key+']').text(snap.val().Item);
+        $('#adminList option[value='+ snap.val().Item+']').text(snap.val().Item);
       })
       //listens for any children removed from the database then updates the selectlist
       dbDropdown.on('child_removed', snap => {
-        $('#list option[value='+snap.key +']').remove();
+        $('#list option[value='+ snap.key +']').remove();
         $('#adminList option[value='+snap.key +']').remove();
       })
 
