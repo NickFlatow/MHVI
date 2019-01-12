@@ -12,7 +12,6 @@ function dbWrite() {
 //quanityTxtField = txtField with quanity we want to add or subtract
 function updateDatabase(item,quantityTxtField){
   // var itemQuantity = firebase.database().ref('bike/Quantity');
-
   //grab database reference to the quantity of the String from item
   const itemQuantity = firebase.database().ref(item + "/Quantity");
   itemQuantity.transaction(function(currentQuantity){
@@ -21,14 +20,19 @@ function updateDatabase(item,quantityTxtField){
 }
 function adminUpdateDatabase(item,quantity,cost){
   const itemCost = firebase.database().ref(item + "/Cost");
-  itemCost.transaction(function(){
+  itemCost.transaction(function(currentCost){
+    if (cost == ""){
+      return(currentCost);
+    }
     return (parseFloat(cost));
   });
   const itemQuantity = firebase.database().ref(item + "/Quantity");
   itemQuantity.transaction(function(currentQuantity){
+    if (quantity == ""){
+      return(currentQuantity);
+    }
     return (currentQuantity + parseInt(quantity));
   });
-
 }
 //seaches database with given searchTerm and prints result to given output
 function searchDatabase(searchTerm,output){
